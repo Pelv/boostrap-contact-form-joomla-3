@@ -1,0 +1,150 @@
+<!--------- INSERISCI PHP QUI -------->
+{source}
+<?php
+	if (isset($_POST["submit"])) {
+		$name = $_POST['name'];
+		$email = $_POST['email'];
+		$message = $_POST['message'];
+		$human = intval($_POST['human']);
+		$from = "From: ".$name.' <'.$email.'>';
+		$to = 'your-email@domani.com';
+		$subject = $_POST['subject'];
+		$body = $message;
+
+		$div ="From: $name\n E-Mail: $email\n Message:\n $message";
+		// Check if name has been entered
+		if (!$_POST['name']) {
+			$errName = 'Please enter your name';
+		}
+
+		// Check if email has been entered and is valid
+		if (!$_POST['email'] || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+			$errEmail = 'Please enter a valid email address';
+		}
+		
+		// Check if subject has been entered
+		if (!$_POST['subject']) {
+			$errSubject = 'Please enter the subject';
+		}
+
+		//Check if message has been entered
+		if (!$_POST['message']) {
+			$errMessage = 'Please enter your message';
+		}
+		//Check if simple anti-bot test is correct
+		if ($human !== 5) {
+			$errHuman = 'Your anti-spam is incorrect';
+		}
+		// If there are no errors, send the email
+		if (!$errName && !$errEmail  && !$errSubject && !$errMessage && !$errHuman) {
+			if (mail ($to, $subject, $body, $from)) {
+				$result='<div class="alert alert-success" role="alert">Thank You! I will be in touch</div>';
+			} else {
+				$result='<div class="alert alert-danger" role="alert">Sorry there was an error sending your message. Please try again later.</div>';
+			}
+		}
+	}
+?>
+{/source}
+
+
+<!--------- INSERISCI CSS QUI -------->
+<style>	
+	.form-contatti {
+		width: 62%;
+		margin-left: 14%;
+	}
+	
+	.bottone-invio {
+		width: 100%;
+		-webkit-box-shadow: 0px 1px 1px 0px rgba(50, 50, 50, 0.75);
+		-moz-box-shadow:    0px 1px 1px 0px rgba(50, 50, 50, 0.75);
+		box-shadow:         0px 1px 1px 0px rgba(50, 50, 50, 0.75);
+		font-weight: 400 !important;
+	}
+
+/* ---------- MEDIA QUERIES --------- */	
+	
+	@media (min-width:1153px) and (max-width:1280px) {  /* --- PC MEDIA RISOLUZIONE + TABLET ORRIZONTALE --- */
+    	
+    }
+	
+	@media (min-width:992px) and (max-width:1152px) {  /* --- PC BASSA RISOLUZIONE + TABLET ORRIZZONTALE --- */
+		.form-contatti {
+			width: 72%;
+			margin-left: 9%;
+		}	
+    }
+	
+	@media (min-width:768px) and (max-width:991px) {  /* --- TABLET VERTICALE + PHABLET --- */
+		.form-contatti {
+			width: 85%;
+			margin-left: 4%;
+		}
+    }
+	
+	@media (max-width:767px) {  /* --- MOBILE --- */
+    	.form-contatti {
+			width: 96%;
+			margin-left: 1%;
+		}
+    }
+
+</style>
+
+
+<!--------- INSERISCI HTML QUI -------->
+<section>
+	<div class="container-fluid">
+		<div class="row form-contatti">
+			<h1 class="page-header text-center">Contact Form Example</h1>
+			<form class="form-horizontal" id="id-form-contattaci" role="form" method="post" action="">
+				<div class="form-group">
+					<label for="name" class="col-sm-2 control-label">Name</label>
+					<div class="col-sm-10">
+						<input required type="text" class="form-control" id="name" name="name" placeholder="First & Last Name"> 
+						{source}<?php echo "<div class='alert alert-danger' role='alert'>$errName</div>";?>{/source}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="email" class="col-sm-2 control-label">Email</label>
+					<div class="col-sm-10">
+						<input required type="email" class="form-control" id="email" name="email" placeholder="example@domain.com"> 
+						{source}<?php echo "<div class='alert alert-danger' role='alert'>$errEmail</div>";?>{/source}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="subject" class="col-sm-2 control-label">Subject</label>
+					<div class="col-sm-10">
+						<input required type="text" class="form-control" id="subject" name="subject" placeholder="The matter of the message"> 
+						{source}<?php echo "<div class='alert alert-danger' role='alert'>$errSubject</div>";?>{/source}
+						</div>
+				</div>
+				<div class="form-group">
+					<label for="message" class="col-sm-2 control-label">Message</label>
+					<div class="col-sm-10">
+						<textarea class="form-control" rows="4" name="message" placeholder="Insert your text here" required></textarea>
+						{source}<?php echo "<div class='alert alert-danger' role='alert'>$errMessage</div>";?>{/source}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="human" class="col-sm-2 control-label">2 + 3 = ?</label>
+					<div class="col-sm-10">
+						<input required type="text" class="form-control" id="human" name="human" placeholder="Your Answer"> 
+						{source}<?php echo "<div class='alert alert-danger' role='alert'>$errHuman</div>";?>{/source}
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-10 col-sm-offset-2">
+						<input id="submit" name="submit" type="submit" value="Send" class="btn btn-primary bottone-invio">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-10 col-sm-offset-2">
+						{source}<?php echo $result; ?>{/source}
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
